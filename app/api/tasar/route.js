@@ -60,29 +60,3 @@ export async function POST(req) {
     return NextResponse.json({ error: "Error en tasación: " + error.message }, { status: 500 });
   }
 }
-
-export async function POST(req) {
-  try {
-    const { query } = await req.json();
-    const apiKey = process.env.GEMINI_API_KEY;
-
-    if (!apiKey) {
-      return NextResponse.json({ error: "Falta la GEMINI_API_KEY en Vercel." }, { status: 500 });
-    }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      generationConfig: { responseMimeType: "application/json" },
-      systemInstruction: SYSTEM_PROMPT
-    });
-
-    const response = await model.generateContent(query);
-    const textResponse = response.response.text().trim();
-    
-    const data = JSON.parse(textResponse);
-    return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json({ error: "Error en tasación: " + error.message }, { status: 500 });
-  }
-}

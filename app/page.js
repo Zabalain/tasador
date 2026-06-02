@@ -3,14 +3,17 @@ import { useState } from 'react';
 
 export default function Home() {
   const [query, setQuery] = useState('');
-  const [result, setResult] = useState('');
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleTasar = async (e) => {
     e.preventDefault();
     if (!query) return;
+    setLoading(false);
     setLoading(true);
-    setResult('');
+    setError('');
+    setData(null);
 
     try {
       const res = await fetch('/api/tasar', {
@@ -18,41 +21,126 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query })
       });
-      const data = await res.json();
-      setResult(data.result || data.error || 'Error sin respuesta');
+      const result = await res.json();
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setData(result);
+      }
     } catch (err) {
-      setResult('Error al conectar con el servidor.');
+      setError('Error al conectar con el servidor de análisis.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '50px auto', padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1 style={{ textAlign: 'center', color: '#333' }}>🚗 Tasador de Coches IA</h1>
-      <p style={{ textAlign: 'center', color: '#666' }}>Escribe la marca, modelo y año para analizar el mercado español.</p>
+    <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
       
-      <form onSubmit={handleTasar} style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-        <input 
-          type="text" 
-          value={query} 
-          onChange={(e) => setQuery(e.target.value)} 
-          placeholder="Ej: Seat Ibiza 2018 TSI 95cv" 
-          style={{ flex: 1, padding: '12px', borderRadius: '6px', border: '1px solid #ccc', fontSize: '16px' }}
-        />
-        <button 
-          type="submit" 
-          disabled={loading}
-          style={{ padding: '12px 24px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '16px', cursor: 'pointer' }}
-        >
-          {loading ? 'Tasando...' : 'Tasar'}
-        </button>
-      </form>
+      {/* Cabecera */}
+      <div style={{ marginBottom: '20px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0', color: '#111' }}>
+          Tasador <span style={{ color: '#2563eb' }}>Autos del Norte</span>
+        </h1>
+        <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>Mercado real · España</p>
+      </div>
+      
+      {/* Formulario */}
+      <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: '1px solid #eee', marginBottom: '16px' }}>
+        <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Vehículo o Listado</label>
+        <form onSubmit={handleTasar}>
+          <textarea 
+            value={query} 
+            onChange={(e) => setQuery(e.target.value)} 
+            placeholder="Ej: Fiat 500L 2013 213000kms" 
+            rows={3}
+            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'none', marginBottom: '12px' }}
+          />
+          <button 
+            type="submit" 
+            disabled={loading}
+            style={{ width: '100%', padding: '14px', backgroundColor: loading ? '#e2e8f0' : '#2563eb', color: loading ? '#94a3b8' : '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: '6px', cursor: 'pointer', transition: 'background-color 0.2s' }}
+          >
+            {loading ? '🔄 Buscando en portales...' : 'Tasar'}
+          </button>
+        </form>
+        <p style={{ fontSize: '11px', color: '#aaa', textAlign: 'center', margin: '8px 0 0 0' }}>coches.net · autoscout24 · wallapop · milanuncios</p>
+      </div>
 
-      {result && (
-        <div style={{ marginTop: '30px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px', border: '1px solid #eee', whiteSpace: 'pre-line', lineHeight: '1.6' }}>
-          <strong>Resultado del análisis:</strong>
-          <p>{result}</p>
+      {error && <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '12px', borderRadius: '8px', fontSize: '14px', marginBottom: '16px', border: '1px solid #fee2e2' }}>{error}</div>}
+
+      {/* Bloque de Resultados Estilo Captura Móvil */}
+      {data && (
+        <div>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+            {/* Tarjeta de Compra B2B */}
+            <div style={{ flex: 1, backgroundColor: '#2563eb', color: '#fff', padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.8, textTransform: 'uppercase' }}>Precio de Compra</span>
+              <div style={{ margin: '14px 0' }}>
+                <span style={{ fontSize: '32px', fontWeight: 'bold' }}>{data.precioCompra}</span>
+                <span style={{ fontSize: '18px', display: 'block', marginTop: '2px' }}>euros</span>
+              </div>
+            </div>
+
+            {/* Tarjeta de Venta VO */}
+            <div style={{ flex: 1, backgroundColor: '#fff', color: '#111', padding: '16px', borderRadius: '12px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>Precio Venta Medio</span>
+              <div style={{ margin: '14px 0' }}>
+                <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#111' }}>{data.precioVentaMedio}</span>
+                <span style={{ fontSize: '18px', display: 'block', marginTop: '2px', color: '#444' }}>euros</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Fila de datos secundarios (Más bajo, Rango, Rotación) */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+            <div style={{ flex: 1, backgroundColor: '#fff', padding: '10px', borderRadius: '8px', border: '1px solid #eee' }}>
+              <span style={{ fontSize: '10px', color: '#888', display: 'block', textTransform: 'uppercase', marginBottom: '4px' }}>Más Bajo</span>
+              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>{data.precioMasBajo} €</span>
+            </div>
+            <div style={{ flex: 1, backgroundColor: '#fff', padding: '10px', borderRadius: '8px', border: '1px solid #eee' }}>
+              <span style={{ fontSize: '10px', color: '#888', display: 'block', textTransform: 'uppercase', marginBottom: '4px' }}>Rango</span>
+              <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#333' }}>{data.rangoMin}-{data.rangoMax} €</span>
+            </div>
+            <div style={{ flex: 1, backgroundColor: '#fff', padding: '10px', borderRadius: '8px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '10px', color: '#888', display: 'block', textTransform: 'uppercase' }}>Rotación</span>
+              <span style={{ 
+                fontSize: '11px', 
+                fontWeight: 'bold', 
+                padding: '2px 6px', 
+                borderRadius: '4px', 
+                alignSelf: 'flex-start',
+                backgroundColor: data.rotacion === 'ALTA' ? '#dcfce7' : data.rotacion === 'MEDIA' ? '#fef9c3' : '#fee2e2',
+                color: data.rotacion === 'ALTA' ? '#15803d' : data.rotacion === 'MEDIA' ? '#a16207' : '#b91c1c',
+                marginTop: '4px'
+              }}>{data.rotacion}</span>
+            </div>
+          </div>
+
+          {/* Resumen Mayorista */}
+          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', marginBottom: '12px', fontSize: '14px', color: '#1e40af', lineHeight: '1.5' }}>
+            {data.resumen}
+          </div>
+
+          {/* Enlaces Encontrados */}
+          {data.enlaces && data.enlaces.length > 0 && (
+            <div style={{ backgroundColor: '#fff', padding: '14px', borderRadius: '12px', border: '1px solid #eee' }}>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>Anuncios Encontrados</span>
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {data.enlaces.map((link, idx) => {
+                  let label = "Ver anuncio real";
+                  if (link.includes("coches.net")) label = "↗ coches.net";
+                  if (link.includes("milanuncios")) label = "↗ milanuncios.com";
+                  if (link.includes("wallapop")) label = "↗ wallapop.com";
+                  return (
+                    <li key={idx}>
+                      <a href={link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: '#2563eb', textDecoration: 'none', fontWeight: '500' }}>{label}</a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>

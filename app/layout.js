@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Tasador de Coches IA',
+  title: 'Tasador Autos del Norte',
   description: 'Analiza el mercado de coches de segunda mano',
 }
 

@@ -50,7 +50,6 @@ export default function Home() {
     setError('');
   };
 
-  // Lógica de colores completa para la tarjeta de rotación
   const obtenerEstilosRotacion = (rotacion) => {
     switch (rotacion) {
       case 'ALTA':
@@ -69,14 +68,14 @@ export default function Home() {
   return (
     <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
       
-      {/* Cabecera optimizada con referencia a portales */}
-      <div style={{ marginBottom: '20px' }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 4px 0', color: '#111' }}>
+      {/* Cabecera y subtítulos CENTRADOS */}
+      <div style={{ marginBottom: '25px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 6px 0', color: '#111' }}>
           Tasador <span style={{ color: '#2563eb' }}>Autos del Norte</span>
         </h1>
         <p style={{ fontSize: '13px', color: '#666', margin: 0, lineHeight: '1.4' }}>
           Mercado real B2B · España <br />
-          <span style={{ fontSize: '11px', color: '#888', fontWeight: '500' }}>
+          <span style={{ fontSize: '11px', color: '#888', fontWeight: '500', display: 'block', marginTop: '2px' }}>
             (Cruce de datos y búsquedas en portales de VO profesionales)
           </span>
         </p>
@@ -84,7 +83,9 @@ export default function Home() {
       
       {/* Formulario */}
       <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: '1px solid #eee', marginBottom: '16px' }}>
-        <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', marginBottom: '8px' }}>Vehículo o Listado</label>
+        <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', marginBottom: '8px' }}>
+          INTRODUZCA VEHICULO O LISTADO
+        </label>
         <form onSubmit={handleTasar}>
           <textarea 
             value={query} 
@@ -98,7 +99,7 @@ export default function Home() {
             disabled={loading}
             style={{ width: '100%', padding: '14px', backgroundColor: loading ? '#e2e8f0' : '#2563eb', color: loading ? '#94a3b8' : '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}
           >
-            {loading ? '🔄 Analizando mercado...' : 'Tasar'}
+            {loading ? '🔄 Analizando mercado...' : 'REALIZAR TASACION'}
           </button>
         </form>
       </div>
@@ -184,12 +185,12 @@ export default function Home() {
             {data.resumen}
           </div>
 
-          {/* Botón Nueva Tasación */}
+          {/* Botón NUEVA TASACIÓN (Mismo formato azul corporativo que el botón principal) */}
           <button
             onClick={handleNuevaTasacion}
-            style={{ width: '100%', padding: '12px', backgroundColor: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
+            style={{ width: '100%', padding: '14px', backgroundColor: '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
           >
-            🔄 Realizar otra tasación
+            🔄 REALIZAR OTRA TASACION
           </button>
         </div>
       )}

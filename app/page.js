@@ -139,28 +139,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', marginBottom: '12px', fontSize: '14px', color: '#1e40af', lineHeight: '1.5' }}>
+          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5' }}>
             {data.resumen}
           </div>
-
-          {data.enlaces && data.enlaces.length > 0 && (
-            <div style={{ backgroundColor: '#fff', padding: '14px', borderRadius: '12px', border: '1px solid #eee' }}>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>Anuncios Encontrados</span>
-              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {data.enlaces.map((link, idx) => {
-                  let label = "Ver ofertas";
-                  if (link.includes("coches.net")) label = "↗ coches.net";
-                  if (link.includes("milanuncios")) label = "↗ milanuncios.com";
-                  if (link.includes("wallapop")) label = "↗ wallapop.com";
-                  return (
-                    <li key={idx}>
-                      <a href={link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: '#2563eb', textDecoration: 'none', fontWeight: '500' }}>{label}</a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
         </div>
       )}
     </div>

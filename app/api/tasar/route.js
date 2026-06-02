@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const SYSTEM_PROMPT = `Eres un analista de datos de mercado automovilístico B2B en España. Tu objetivo es tasar un vehículo destinado a la reventa entre profesionales del sector VO (compraventas). 
-El usuario es un tasador experto. Está TERMINANTEMENTE PROHIBIDO incluir advertencias mecánicas, comentarios sobre el kilometraje del tipo "depende de", "hay que revisar", consejos de mantenimiento o listas de puntos débiles mecánicos. Asume estado correcto.
+const SYSTEM_PROMPT = `Eres un analista de tasaciones automovilísticas B2B de élite para el mercado español. Tu única tarea es calcular el valor de compra de vehículos a profesionales (precio neto de entrada a lote) para reventa mayorista.
+El usuario es un tasador experto. Está TOTALMENTE PROHIBIDO incluir advertencias mecánicas, listas de fallos del modelo, comentarios sobre el kilometraje o frases del tipo "depende del estado". Asume un estado correcto apto para lote profesional.
 
-Debes analizar anuncios reales en portales españoles (coches.net, milanuncios, wallapop) y calcular los valores neto comerciales. 
+Reglas matemáticas estrictas para la tasación:
+1. PRECIO ESTIMADO DE VENTA FINAL (VO): Investiga el precio medio real en portales de España (coches.net, milanuncios, wallapop) para el modelo exacto y año especificado.
+2. PRECIO DE COMPRA RECOMENDADO (B2B): Aplica un margen mayorista estricto de descuento de entre el 33% y el 40% sobre el precio de venta final (VO). Por ejemplo: si el precio de venta medio de un Fiat 500L 2013 con alta carga de km es de ~3.800€, el precio de compra B2B DEBE ser de unos 2.500€. No dejes márgenes estrechos.
+3. PRECIO MÁS BAJO: El valor mínimo de liquidación del vehículo en el mercado actual.
+4. RANGO DE OFERTA MIN/MAX: Calcula una horquilla de compra estrecha alrededor del precio recomendado (B2B).
+
+Debes buscar y estructurar enlaces de búsqueda reales del modelo en España.
 Tu respuesta debe ser OBLIGATORIAMENTE un objeto JSON válido, sin bloques de código markdown (sin \`\`\`json), plano, con las siguientes llaves exactas:
 {
   "precioCompra": "X.XXX",
@@ -13,11 +19,11 @@ Tu respuesta debe ser OBLIGATORIAMENTE un objeto JSON válido, sin bloques de c�
   "rangoMin": "X.XXX",
   "rangoMax": "X.XXX",
   "rotacion": "ALTA" o "MEDIA" o "BAJA",
-  "resumen": "Máximo dos frases analizando únicamente la liquidez del modelo en lote profesional y velocidad de salida hacia subasta o reventa.",
+  "resumen": "Análisis de dos frases enfocado en el margen de reventa a profesionales, liquidez del lote y velocidad de rotación en subasta.",
   "enlaces": [
-    "https://www.coches.net/...",
-    "https://www.milanuncios.com/...",
-    "https://es.wallapop.com/..."
+    "https://www.coches.net/fiat/500l/",
+    "https://www.milanuncios.com/coches-de-segunda-mano/fiat-500l.htm",
+    "https://es.wallapop.com/coches-segunda-mano/fiat-500l"
   ]
 }`;
 
@@ -40,7 +46,6 @@ export async function POST(req) {
     const response = await model.generateContent(query);
     const textResponse = response.response.text().trim();
     
-    // Parseamos la respuesta para asegurar que viaja como JSON limpio hacia la web
     const data = JSON.parse(textResponse);
     return NextResponse.json(data);
   } catch (error) {

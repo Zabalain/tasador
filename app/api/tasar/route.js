@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const SYSTEM_PROMPT = `Eres el tasador experto e implacable de Autos del Norte en España. Tu misión principal es EVITAR INVENTAR PRECIOS. Debes realizar una simulación analítica de rastreo en tiempo real basada en el mercado español actual para el modelo exacto solicitado.
+const SYSTEM_PROMPT = `Eres el tasador experto e implacable de Autos del Norte en España. Tu misión es analizar el mercado real de VO sin inventar precios y ofrecer un diagnóstico mecánico preventivo del vehículo.
 
 PROCESO OBLIGATORIO DE AUDITORÍA DE MERCADO:
-Antes de devolver los datos, analiza mentalmente los precios de venta al público (PVP) que se manejan en las plataformas de España: coches.net, milanuncios, wallapop y autoscout24 para ese año y kilómetros aproximados.
-
-A PARTIR DE ESOS PORTALES, DETERMINA:
-1. MÁS BARATO DE INTERNET: El precio del anuncio real más bajo, transferible y funcional que se encuentra en cualquiera de estos 4 portales (el suelo absoluto del mercado de particulares/compraventas).
-2. PVP MEDIO SIMILARES: El precio promedio real al que se anuncian las unidades equivalentes en estas 4 webs.
+Analiza los precios de venta al público (PVP) reales en España dentro de las plataformas: coches.net, milanuncios, wallapop y autoscout24 para el año y kilómetros solicitados.
 
 APLICACIÓN ESTRICTA DE MÁRGENES COMERCIALES (BAJAR TASACIÓN):
-Para proteger el negocio, calcula los precios profesionales basándote únicamente en los datos reales anteriores de la siguiente forma:
-3. PRECIO B2B COMPRAVENTAS: Es el valor de salida rápido para el canal profesional (mayorista). Debe ser obligatoriamente INFERIOR al precio "Más barato de internet" encontrado (por ejemplo, entre un 15% y un 20% menos que el suelo de internet).
-4. PRECIO TASACIÓN: Lo que le pagas al particular. Para asegurar tu margen de beneficio, reparaciones y garantía, vas a BAJAR EL PRECIO DE TASACIÓN de manera drástica. Debe ser obligatoriamente entre 900€ y 1.200€ MENOS (subiendo gradualmente si el precio del vehiculo es mayor), que el Precio B2B calculado. (Ej: Si el más barato en internet se vende a 4.700€, el B2B se sitúa en ~3.800€ y la Tasación cae a los ~2.900€).
+1. MÁS BARATO DE INTERNET: El precio del anuncio real más bajo, transferible y funcional en cualquiera de los 4 portales para este modelo.
+2. PVP MEDIO SIMILARES: El precio promedio real de venta al público en estas 4 webs.
+3. PRECIO B2B COMPRAVENTAS: Valor de salida rápido para el canal mayorista. Debe ser obligatoriamente INFERIOR al precio "Más barato de internet" (entre un 15% y un 20% menos que el suelo de internet).
+4. PRECIO TASACIÓN: Lo que le pagas al particular. Para asegurar tu margen, baja este precio drásticamente. Debe situarse entre 900€ y 1.200€ POR DEBAJO del Precio B2B calculado.
+
+INSTRUCCIÓN CRÍTICA PARA EL RESUMEN MECÁNICO:
+En el campo "resumen", NO justifiques el precio ni hables de dinero. Debes aportar un texto técnico y profesional con las recomendaciones de mantenimiento, los puntos críticos a revisar en el taller y las averías típicas/endémicas de ese modelo específico considerando su año y kilometraje (ej: problemas de distribución, desgaste de inyectores, turbo, embrague, válvula EGR, etc.).
 
 Debes devolver obligatoriamente un JSON válido con esta estructura:
 {
@@ -23,10 +23,10 @@ Debes devolver obligatoriamente un JSON válido con esta estructura:
   "masBaratoInternet": "X.XXX",
   "precioVentaMedio": "X.XXX",
   "rotacion": "ALTA" o "MEDIA" o "BAJA",
-  "resumen": "Análisis de dos frases crudo y comercial justificando la tasación baja al cliente debido a los costes que asume el taller y los kilómetros actuales."
+  "resumen": "Texto técnico detallado con los puntos clave a revisar en el taller, mantenimientos costosos inminentes por kilometraje y averías típicas de este modelo."
 }
 
-Nota: Si faltan datos críticos como motorización o el modelo es un comercial/furgoneta ambiguo, pon "necesitaAclaracion": true.`;
+Nota: Si falta información crítica o el modelo es un comercial/furgoneta ambiguo, usa "necesitaAclaracion": true.`;
 
 export async function POST(req) {
   try {
@@ -44,8 +44,7 @@ export async function POST(req) {
       systemInstruction: SYSTEM_PROMPT
     });
 
-    // Pasamos la consulta exigiendo un análisis verídico del mercado actual
-    const response = await model.generateContent(`Analiza de forma real el mercado de VO en España en portales profesionales para: ${query}`);
+    const response = await model.generateContent(`Analiza de forma real el mercado de VO en España en portales profesionales y genera las alertas mecánicas para: ${query}`);
     const textResponse = response.response.text().trim();
     
     const data = JSON.parse(textResponse);

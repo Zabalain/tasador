@@ -84,7 +84,7 @@ export default function Home() {
       {/* Formulario */}
       <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', border: '1px solid #eee', marginBottom: '16px' }}>
         <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase', marginBottom: '8px' }}>
-          INTRODUZCA VEHICULO O LISTADO
+          INTRODUZCA VEHICULO O DESCRIPCION
         </label>
         <form onSubmit={handleTasar}>
           <textarea 

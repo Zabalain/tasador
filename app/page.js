@@ -106,7 +106,7 @@ export default function Home() {
 
       {error && <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '12px', borderRadius: '8px', fontSize: '14px', marginBottom: '16px', border: '1px solid #fee2e2' }}>{error}</div>}
 
-      {/* Preguntas interactivas furgonetas */}
+      {/* Preguntas interactivas */}
       {data && data.necesitaAclaracion && (
         <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #eab308', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
           <p style={{ fontSize: '15px', fontWeight: '600', color: '#854d0e', margin: '0 0 12px 0', lineHeight: '1.4' }}>⚠️ {data.pregunta}</p>
@@ -124,13 +124,13 @@ export default function Home() {
         </div>
       )}
 
-      {/* RESULTADOS CON MÁRGENES PROFESIONALES */}
+      {/* RESULTADOS MOSTRANDO LAS CLAVES CORRECTAS */}
       {data && !data.necesitaAclaracion && (
         <div>
-          {/* Fila Bloque Superior - Tasación vs Venta */}
+          {/* Fila Bloque Superior - ROJO para la Tasación Ajustada */}
           <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
             <div style={{ flex: 1, backgroundColor: '#dc2626', color: '#fff', padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.9, textTransform: 'uppercase' }}>PRECIO TASACIÓN (Máx Compra)</span>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.9, textTransform: 'uppercase' }}>PRECIO TASACIÓN (Particular)</span>
               <div style={{ margin: '14px 0 0 0' }}>
                 <span style={{ fontSize: '28px', fontWeight: 'bold' }}>{data.precioTasacion}€</span>
               </div>
@@ -144,11 +144,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Nueva Tarjeta Destacada: Precio Profesional Mayorista (B2B) */}
+          {/* Bloque Profesional Reventa Mayorista B2B */}
           <div style={{ backgroundColor: '#1e3a8a', color: '#fff', padding: '14px 16px', borderRadius: '12px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', uppercase: true, opacity: 0.85, display: 'block' }}>PRECIO REVENTA A COMPRAVENTAS (B2B)</span>
-              <span style={{ fontSize: '13px', opacity: 0.7 }}>Margen de salida rápida entre profesionales</span>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.9, display: 'block' }}>PRECIO REVENTA A COMPRAVENTAS (B2B)</span>
+              <span style={{ fontSize: '12px', opacity: 0.75 }}>Tu valor de salida rápido en red mayorista</span>
             </div>
             <span style={{ fontSize: '24px', fontWeight: 'bold' }}>{data.precioB2B}€</span>
           </div>
@@ -173,7 +173,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Justificación e informes mecánicos de la tasación baja */}
+          {/* Resumen */}
           <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '20px' }}>
             {data.resumen}
           </div>

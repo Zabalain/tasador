@@ -68,7 +68,7 @@ export default function Home() {
   return (
     <div style={{ maxWidth: '480px', margin: '0 auto', padding: '16px', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' }}>
       
-      {/* Cabecera y subtítulos CENTRADOS */}
+      {/* Cabecera */}
       <div style={{ marginBottom: '25px', textAlign: 'center' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 6px 0', color: '#111' }}>
           Tasador <span style={{ color: '#2563eb' }}>Autos del Norte</span>
@@ -90,7 +90,7 @@ export default function Home() {
           <textarea 
             value={query} 
             onChange={(e) => setQuery(e.target.value)} 
-            placeholder="Ej: Fiat Scudo 2009 130000" 
+            placeholder="Ej: Dacia Lodgy 2013 161000 1.5DCI" 
             rows={2}
             style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', boxSizing: 'border-box', fontFamily: 'inherit', resize: 'none', marginBottom: '12px' }}
           />
@@ -106,7 +106,7 @@ export default function Home() {
 
       {error && <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '12px', borderRadius: '8px', fontSize: '14px', marginBottom: '16px', border: '1px solid #fee2e2' }}>{error}</div>}
 
-      {/* Flujo de pregunta interactiva */}
+      {/* Preguntas interactivas furgonetas */}
       {data && data.necesitaAclaracion && (
         <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #eab308', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
           <p style={{ fontSize: '15px', fontWeight: '600', color: '#854d0e', margin: '0 0 12px 0', lineHeight: '1.4' }}>⚠️ {data.pregunta}</p>
@@ -124,68 +124,61 @@ export default function Home() {
         </div>
       )}
 
-      {/* Bloque de resultados final */}
+      {/* RESULTADOS CON MÁRGENES PROFESIONALES */}
       {data && !data.necesitaAclaracion && (
         <div>
-          {/* Fila principal de Precios */}
+          {/* Fila Bloque Superior - Tasación vs Venta */}
           <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-            <div style={{ flex: 1, backgroundColor: '#2563eb', color: '#fff', padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.9, textTransform: 'uppercase' }}>Precio Máx Compra B2B</span>
+            <div style={{ flex: 1, backgroundColor: '#dc2626', color: '#fff', padding: '16px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', opacity: 0.9, textTransform: 'uppercase' }}>PRECIO TASACIÓN (Máx Compra)</span>
               <div style={{ margin: '14px 0 0 0' }}>
-                <span style={{ fontSize: '28px', fontWeight: 'bold' }}>{data.precioCompra}€</span>
+                <span style={{ fontSize: '28px', fontWeight: 'bold' }}>{data.precioTasacion}€</span>
               </div>
             </div>
 
             <div style={{ flex: 1, backgroundColor: '#fff', color: '#111', padding: '16px', borderRadius: '12px', border: '1px solid #eee', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>Precio Venta VO Medio</span>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', textTransform: 'uppercase' }}>PRECIO VENTA VO MEDIO</span>
               <div style={{ margin: '14px 0 0 0' }}>
                 <span style={{ fontSize: '28px', fontWeight: 'bold', color: '#111' }}>{data.precioVentaMedio}€</span>
               </div>
             </div>
           </div>
 
-          {/* Fila secundaria: Explicaciones mejoradas y Rotación con color total */}
+          {/* Nueva Tarjeta Destacada: Precio Profesional Mayorista (B2B) */}
+          <div style={{ backgroundColor: '#1e3a8a', color: '#fff', padding: '14px 16px', borderRadius: '12px', marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <span style={{ fontSize: '11px', fontWeight: 'bold', uppercase: true, opacity: 0.85, display: 'block' }}>PRECIO REVENTA A COMPRAVENTAS (B2B)</span>
+              <span style={{ fontSize: '13px', opacity: 0.7 }}>Margen de salida rápida entre profesionales</span>
+            </div>
+            <span style={{ fontSize: '24px', fontWeight: 'bold' }}>{data.precioB2B}€</span>
+          </div>
+
+          {/* Fila secundaria: Suelo, Horizonte y Rotación */}
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-            
-            {/* Tarjeta Más Bajo Explicada */}
             <div style={{ flex: 1.1, backgroundColor: '#fff', padding: '12px 10px', borderRadius: '12px', border: '1px solid #eee' }}>
               <span style={{ fontSize: '10px', color: '#e11d48', display: 'block', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '2px' }}>SUELO MERCADO</span>
               <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#333', display: 'block' }}>{data.precioMasBajo} €</span>
-              <span style={{ fontSize: '9px', color: '#777', display: 'block', marginTop: '4px', lineHeight: '1.2' }}>Anuncio más económico actual en España.</span>
+              <span style={{ fontSize: '9px', color: '#777', display: 'block', marginTop: '4px', lineHeight: '1.2' }}>Anuncio más económico en portales.</span>
             </div>
 
-            {/* Tarjeta Rango Explicada */}
             <div style={{ flex: 1.2, backgroundColor: '#fff', padding: '12px 10px', borderRadius: '12px', border: '1px solid #eee' }}>
               <span style={{ fontSize: '10px', color: '#4b5563', display: 'block', fontWeight: 'bold', textTransform: 'uppercase', marginBottom: '2px' }}>HORIZONTE VO</span>
-              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333', display: 'block', whiteSpace: 'nowrap' }}>{data.rangoMin}-{data.rangoMax} €</span>
-              <span style={{ fontSize: '9px', color: '#777', display: 'block', marginTop: '4px', lineHeight: '1.2' }}>Precios habituales según estado y garantía.</span>
+              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#333', display: 'block' }}>{data.rangoMin}-{data.rangoMax} €</span>
+              <span style={{ fontSize: '9px', color: '#777', display: 'block', marginTop: '4px', lineHeight: '1.2' }}>Rango habitual de venta público.</span>
             </div>
 
-            {/* Tarjeta Rotación TOTALMENTE coloreada */}
-            <div style={{ 
-              flex: 0.9, 
-              backgroundColor: estilosRotacion.backgroundColor, 
-              padding: '12px 10px', 
-              borderRadius: '12px', 
-              display: 'flex', 
-              flexDirection: 'column', 
-              justifyContent: 'center',
-              alignItems: 'center',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
-              transition: 'all 0.3s'
-            }}>
-              <span style={{ fontSize: '10px', color: estilosRotacion.labelColor, fontWeight: 'bold', textTransform: 'uppercase', opacity: 0.9, letterSpacing: '0.5px' }}>ROTACIÓN</span>
+            <div style={{ flex: 0.9, backgroundColor: estilosRotacion.backgroundColor, padding: '12px 10px', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+              <span style={{ fontSize: '10px', color: estilosRotacion.labelColor, fontWeight: 'bold', textTransform: 'uppercase', opacity: 0.9 }}>ROTACIÓN</span>
               <span style={{ fontSize: '18px', fontWeight: '900', color: estilosRotacion.color, marginTop: '2px' }}>{data.rotacion}</span>
             </div>
-
           </div>
 
-          {/* Resumen con alertas mecánicas */}
+          {/* Justificación e informes mecánicos de la tasación baja */}
           <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '20px' }}>
             {data.resumen}
           </div>
 
-          {/* Botón NUEVA TASACIÓN (Mismo formato azul corporativo que el botón principal) */}
+          {/* Botón Realizar otra tasación */}
           <button
             onClick={handleNuevaTasacion}
             style={{ width: '100%', padding: '14px', backgroundColor: '#2563eb', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}

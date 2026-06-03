@@ -177,10 +177,10 @@ export default function Home() {
 
           </div>
 
-          {/* Resumen Justificativo */}
-          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '20px' }}>
-            {data.resumen}
-          </div>
+       {/* Resumen Justificativo de Mecánica y Puntos a Revisar */}
+<div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '20px', textAlign: 'left' }}>
+  {data.resumen}
+</div>
 
           {/* Botón Realizar otra tasación */}
           <button

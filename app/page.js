@@ -14,7 +14,7 @@ export default function Home() {
   // Estado para el feedback de la tasación actual
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
-  // Cargar historial al arrancar
+  // Cargar historial al arrancar el navegador
   useEffect(() => {
     const guardado = localStorage.getItem('historial_tasaciones');
     if (guardado) {
@@ -63,7 +63,6 @@ export default function Home() {
   const handleTasar = (e) => {
     e.preventDefault();
     if (!query) return;
-    setData(null);
     ejecutarTasacion(query);
   };
 
@@ -78,7 +77,6 @@ export default function Home() {
     }
   };
 
-  // FUNCIÓN CORREGIDA: Limpia la pantalla para realizar una nueva tasación
   const handleNuevaTasacion = () => {
     setData(null);
     setQuery('');
@@ -143,17 +141,18 @@ export default function Home() {
 
       {error && <div style={{ color: '#ef4444', backgroundColor: '#fef2f2', padding: '12px', borderRadius: '8px', fontSize: '14px', marginBottom: '16px', border: '1px solid #fee2e2', textAlign: 'center' }}>{error}</div>}
 
-      {/* RESULTADOS DE LA TASACIÓN ACTUAL */}
+      {/* BLOQUE DE RESULTADOS SE RENDERIZA AQUÍ SIEMPRE QUE EXISTA DATA */}
       {data && !data.necesitaAclaracion && (
-        <div>
-          {/* Bloque Superior: Precios Clave */}
+        <div style={{ marginBottom: '20px' }}>
+          
+          {/* Bloque Superior: En paralelo, Fondo blanco y Texto Centrado */}
           <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-            <div style={{ flex: 1, backgroundColor: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div style={{ flex: 1, backgroundColor: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
               <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#dc2626', textTransform: 'uppercase', marginBottom: '6px' }}>PRECIO TASACIÓN</span>
               <span style={{ fontSize: '26px', fontWeight: '800', color: '#111827' }}>{data.precioTasacion}€</span>
             </div>
 
-            <div style={{ flex: 1, backgroundColor: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div style={{ flex: 1, backgroundColor: '#ffffff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
               <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#1e3a8a', textTransform: 'uppercase', marginBottom: '6px' }}>PRECIO B2B COMPRAVENTAS</span>
               <span style={{ fontSize: '26px', fontWeight: '800', color: '#111827' }}>{data.precioB2B}€</span>
             </div>
@@ -196,17 +195,17 @@ export default function Home() {
               </div>
             ) : (
               <span style={{ fontSize: '13px', color: '#2563eb', fontWeight: 'bold' }}>
-                Ajuste registrado: {feedbackEnviado}. El sistema usará este sesgo para calibrar las siguientes consultas.
+                Ajuste registrado: {feedbackEnviado}
               </span>
             )}
           </div>
 
           {/* Informe de Averías */}
-          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '20px' }}>
+          <div style={{ backgroundColor: '#eff6ff', borderLeft: '4px solid #2563eb', padding: '14px', borderRadius: '0 12px 12px 0', fontSize: '14px', color: '#1e40af', lineHeight: '1.5', marginBottom: '16px' }}>
             <strong>PUNTOS CRÍTICOS DE INSPECCIÓN:</strong><br />{data.resumen}
           </div>
 
-          <button type="button" onClick={handleNuevaTasacion} style={{ width: '100%', padding: '14px', backgroundColor: '#f3f4f6', color: '#1f2937', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '30px' }}>
+          <button type="button" onClick={handleNuevaTasacion} style={{ width: '100%', padding: '14px', backgroundColor: '#f3f4f6', color: '#1f2937', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer' }}>
             🔄 BORRAR PANTALLA PARA OTRO COCHE
           </button>
         </div>

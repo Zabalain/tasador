@@ -70,16 +70,19 @@ export default function Home() {
   const handleFeedback = (tipo) => {
     setFeedbackEnviado(tipo);
     
-    // Actualizar el último registro del historial con el ajuste del profesional
     if (historial.length > 0) {
       const nuevoHistorial = [...historial];
       nuevoHistorial[0].feedback = tipo;
       setHistorial(nuevoHistorial);
       localStorage.setItem('historial_tasaciones', JSON.stringify(nuevoHistorial));
     }
-    
-    // NOTA: El prompt del sistema en route.js ya lee de forma indirecta 
-    // las tendencias restrictivas que le marcamos para ir bajando los precios.
+  };
+
+  // FUNCIÓN CORREGIDA: Limpia la pantalla para realizar una nueva tasación
+  const handleNuevaTasacion = () => {
+    setData(null);
+    setQuery('');
+    setFeedbackEnviado(false);
   };
 
   const eliminarDelHistorial = (id) => {
@@ -181,13 +184,13 @@ export default function Home() {
             </span>
             {!feedbackEnviado ? (
               <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={() => handleFeedback('Demasiado Alto 📈')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button type="button" onClick={() => handleFeedback('Demasiado Alto 📈')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                   DEMASIADO ALTO
                 </button>
-                <button onClick={() => handleFeedback('Correcto  ✅')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #86efac', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button type="button" onClick={() => handleFeedback('Correcto  ✅')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #86efac', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                   CORRECTO
                 </button>
-                <button onClick={() => handleFeedback('Demasiado Bajo 📉')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#fef9c3', color: '#854d0e', border: '1px solid #fef08a', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
+                <button type="button" onClick={() => handleFeedback('Demasiado Bajo 📉')} style={{ flex: 1, padding: '10px 4px', backgroundColor: '#fef9c3', color: '#854d0e', border: '1px solid #fef08a', borderRadius: '6px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}>
                   DEMASIADO BAJO
                 </button>
               </div>
@@ -203,7 +206,7 @@ export default function Home() {
             <strong>PUNTOS CRÍTICOS DE INSPECCIÓN:</strong><br />{data.resumen}
           </div>
 
-          <button onClick={handleNuevaTasacion} style={{ width: '100%', padding: '14px', backgroundColor: '#f3f4f6', color: '#1f2937', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '30px' }}>
+          <button type="button" onClick={handleNuevaTasacion} style={{ width: '100%', padding: '14px', backgroundColor: '#f3f4f6', color: '#1f2937', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer', marginBottom: '30px' }}>
             🔄 BORRAR PANTALLA PARA OTRO COCHE
           </button>
         </div>
@@ -243,6 +246,7 @@ export default function Home() {
             historialFiltrado.map((item) => (
               <div key={item.id} style={{ padding: '10px', borderRadius: '8px', border: '1px solid #f3f4f6', backgroundColor: '#f9fafb', position: 'relative' }}>
                 <button 
+                  type="button"
                   onClick={() => eliminarDelHistorial(item.id)} 
                   style={{ position: 'absolute', top: '8px', right: '8px', border: 'none', background: 'none', color: '#9ca3af', fontSize: '14px', cursor: 'pointer' }}
                 >

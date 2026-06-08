@@ -12,7 +12,7 @@ export default function Home() {
   const [busquedaHistorial, setBusquedaHistorial] = useState('');
   const [feedbackEnviado, setFeedbackEnviado] = useState(false);
 
-  // Cargar HISTORIAL PERMANENTE sin importar la fecha
+  // Cargar HISTORIAL PERMANENTE
   useEffect(() => {
     const guardado = localStorage.getItem('historial_tasaciones_permanente');
     if (guardado) {
@@ -30,7 +30,7 @@ export default function Home() {
     const altos = ultimosAjustes.filter(f => f.includes('Alto')).length;
     const bajos = ultimosAjustes.filter(f => f.includes('Bajo')).length;
     
-    // Creamos un sesgo basado en tus botones: si marcas "Alto", exigimos bajar más los precios
+    // Creamos un sesgo basado en tus botones
     let ordenCorreccion = "Sigue la fórmula estándar.";
     if (altos > bajos) {
       ordenCorreccion = `ATENCIÓN: El usuario profesional indica que estás tasando muy ALTO en sus últimos coches. Sé más agresivo y resta un 10% extra en el canal B2B y Tasación para proteger su margen.`;
@@ -39,7 +39,6 @@ export default function Home() {
     }
 
     try {
-      // Enviamos la consulta combinada con tu feedback acumulado
       const res = await fetch('/api/tasar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,7 +52,7 @@ export default function Home() {
       } else {
         setData(result);
         
-        // Guardar con Fecha Completa (Día/Mes/Año) para consultas de hace meses
+        // Guardar con Fecha Completa (Día/Mes/Año) para consultas históricas
         const nuevaTasacion = {
           id: Date.now(),
           fecha: new Date().toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }),
@@ -69,7 +68,7 @@ export default function Home() {
       }
     } catch (err) {
       setError('Error al conectar con el servidor.');
-    } block {
+    } finally {
       setLoading(false);
     }
   };
@@ -98,15 +97,10 @@ export default function Home() {
   };
 
   const eliminarDelHistorial = (id) => {
-    const filtrado = historial.filter(item => item.id !== id);
-    setHistorial(filtrado);
-    localStorage.setItem('historial_tasaciones_permanente', JSON.stringify(filtrado));
-  };
-
-  const limpiarTodoElHistorial = () => {
-    if(confirm("🚨 ¿Seguro que quieres borrar TODO el historial permanente? Perderás los registros de meses anteriores.")) {
-      setHistorial([]);
-      localStorage.removeItem('historial_tasaciones_permanente');
+    if(confirm("¿Seguro que quieres eliminar esta tasación específica de la lista?")) {
+      const filtrado = historial.filter(item => item.id !== id);
+      setHistorial(filtrado);
+      localStorage.setItem('historial_tasaciones_permanente', JSON.stringify(filtrado));
     }
   };
 
@@ -122,7 +116,8 @@ export default function Home() {
   const estilosRotacion = data && !data.necesitaAclaracion ? obtenerEstilosRotacion(data.rotacion) : {};
 
   const historialFiltrado = historial.filter(item => 
-    item.vehiculo.toLowerCase().includes(busquedaHistorial.toLowerCase())
+    item.vehiculo.toLowerCase().includes(busquedaHistorial.toLowerCase()) ||
+    item.fecha.toLowerCase().includes(busquedaHistorial.toLowerCase())
   );
 
   return (
@@ -223,24 +218,19 @@ export default function Home() {
 
       <hr style={{ border: '0', height: '1px', backgroundColor: '#e5e7eb', margin: '20px 0' }} />
 
-      {/* SECCIÓN HISTORIAL TOTAL PERMANENTE */}
+      {/* SECCIÓN HISTORIAL TOTAL PERMANENTE (MODIFICADO) */}
       <div style={{ backgroundColor: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #eee' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', color: '#111', margin: 0, textTransform: 'uppercase' }}>
-            Historial de Tasaciones ({historial.length})
+          <h3 style={{ fontSize: '13px', fontWeight: 'bold', color: '#111', margin: 0, textTransform: 'uppercase' }}>
+            Consultar Histórico de Tasaciones ({historial.length})
           </h3>
-          {historial.length > 0 && (
-            <button onClick={limpiarTodoElHistorial} style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '11px', fontWeight: 'bold', cursor: 'pointer' }}>
-              VACIAR TODO
-            </button>
-          )}
         </div>
 
         <input 
           type="text" 
           value={busquedaHistorial}
           onChange={(e) => setBusquedaHistorial(e.target.value)}
-          placeholder="🔎 Buscar coche o fecha (ej: Dacia, 2026...)" 
+          placeholder="🔎 Buscar por coche, matrícula o fecha (ej: Fiat, 2026...)" 
           style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '13px', boxSizing: 'border-box', marginBottom: '12px' }}
         />
 
@@ -255,7 +245,8 @@ export default function Home() {
                 <button 
                   type="button"
                   onClick={() => eliminarDelHistorial(item.id)} 
-                  style={{ position: 'absolute', top: '8px', right: '8px', border: 'none', background: 'none', color: '#9ca3af', fontSize: '14px', cursor: 'pointer' }}
+                  style={{ position: 'absolute', top: '8px', right: '8px', border: 'none', background: 'none', color: '#d1d5db', fontSize: '13px', cursor: 'pointer' }}
+                  title="Eliminar registro individual"
                 >
                   ✕
                 </button>
